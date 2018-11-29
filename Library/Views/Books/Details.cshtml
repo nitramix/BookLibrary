@@ -1,0 +1,16 @@
+﻿@model Library.Models.Book
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Title</h2>
+
+<ul>
+    <li>Genre: @Model.Genre.Name</li>
+    <li>Author: @Model.Author.Name</li>
+    <li>Released Year: @Model.ReleaseDate</li>
+    <li>Number of Pages: @Model.NumberOfPages</li>
+    <li>Available Books: @Model.NumberInStock</li>
+</ul>
+

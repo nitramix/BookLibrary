@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Library.Models.Book>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Books</h2>
+
+@Html.ActionLink("New Book", "New", "Books", new { @class = "btn btn-primary" })
+<table id="books" class="table table-striped table-hover " style="font-size:large">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Author</th>
+            <th>Available books</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section scripts{
+  <script>
+      $(document).ready(function () {
+            var table = $("#books").DataTable({
+                  ajax: {
+                      url: "/api/books",
+                      dataSrc: ""
+                  },
+                  columns: [
+                      {
+                          data: "title",
+                          render: function (data, type, book) {
+                              return "<a href='/books/edit/" + book.id + "'>" + book.title + "</a>";
+                          }
+                      },
+                      {
+                          data: "genre.name"
+                      },
+                      {
+                          data: "author.name"
+                      },
+                      {
+                          data: "numberInStock"
+                      },
+                      {
+                          data: "id",
+                          render: function (data) {
+                              return "<button class ='btn-link js-delete' data-book-id=" + data + ">Delete</button>";
+                          }
+                      }
+              ]
+          })
+
+         $("#books").on("click", ".js-delete", function () {
+             var button = $(this)
+
+             bootbox.confirm("Are you sure you want to delete this book?", function (result) {
+                 if (result) {
+                     $.ajax({
+                         url: "/api/books/" + button.attr("data-book-id"),
+                         method: "DELETE",
+                         success: function () {
+                             table.row(button.parents("tr")).remove().draw();
+                         }
+                     })
+                 }
+             });
+         })  
+      })
+
+
+
+
+
+
+
+      $(document).ready(function () {
+          $("#books").DataTable();
+      })
+    </script>
+    }

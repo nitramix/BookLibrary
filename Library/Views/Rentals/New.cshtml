@@ -1,0 +1,50 @@
+﻿@model Library.ViewModels.RentalViewModel
+@{
+                /**/
+
+                ViewBag.Title = "New";
+                Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>@Model._Title</h2>
+
+@using (Html.BeginForm("Save", "Rentals"))
+{
+    <div class="form-group">
+            @Html.LabelFor(x => x.BookId)
+            @Html.DropDownListFor(x => x.BookId, new SelectList(Model.Books, "Id", "Title"), "Select Book", new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.BookId)
+        </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.ClientId)
+        @Html.DropDownListFor(x => x.ClientId, new SelectList(Model.Clients, "Id", "Name"), "Select Client", new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.ClientId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.DateRented)
+        @Html.TextBoxFor(x => x.DateRented, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.DateRented)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.DateReturned)
+        @Html.TextBoxFor(x => x.DateReturned, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.DateReturned)
+    </div>
+
+
+    @Html.HiddenFor(x => x.Id)
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+
+}
+
+<div>
+    @Html.ActionLink("Back to list", "Index")
+</div>
+

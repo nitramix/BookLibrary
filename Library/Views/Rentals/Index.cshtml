@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Library.Models.Rental>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Rentals</h2>
+
+@Html.ActionLink("New Rental", "New", "Rentals", new { @class = "btn btn-primary" })
+
+<table id="rentals" class="table table-striped table-hover " style="font-size:large">
+    <thead>
+        <tr>
+            <th>Book</th>
+            <th>Client</th>
+            <th>Date Rented</th>
+            <th>Date Returned</th>
+            <th>Delete</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            var table = $("#rentals").DataTable({
+                ajax: {
+                    url: "/api/rentals",
+                    dataSrc: ""
+                },               
+                "columns": [
+                    {
+                        data: "book",
+                        render: function (data) {
+                            return "<a href ='/books/details/" + data.id + "'>" + data.title + "</a>";
+                        },
+                    },
+                    {
+                        data: "client",
+                        render: function (data) {
+                            return "<a href ='/clients/details/" + data.id + "'>" + data.name + "</a>";
+                        },           
+                    },
+                    {
+                        data: "dateRented"
+                    },
+                    {
+                        data: "dateReturned"
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class ='btn-link js-delete' data-rental-id=" + data + ">Delete</button>";
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<a href ='/rentals/edit/" + data + "'>" + "Edit" + "</a>";
+                        }
+                    }
+                ]
+            });
+
+            $("#rentals").on("click", ".js-delete", function () {
+                var button = $(this)
+
+                bootbox.confirm("Are you sure you want to delete this rental?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/rentals/" + button.attr("data-rental-id"),
+                            method: "DELETE",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+                        })
+                    }
+                });
+            })
+
+        })
+    
+    </script>
+}
